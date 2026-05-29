@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Prajwal Gadakh — Java Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#0a0a0f;
+    --surface:#13131a;
+    --card:#1a1a24;
+    --border:#2a2a3a;
+    --accent:#4fffb0;
+    --accent2:#7c6dff;
+    --text:#f0f0f5;
+    --muted:#7a7a9a;
+    --tag-bg:#1e1e30;
+    --mono:'Space Mono',monospace;
+    --sans:'Syne',sans-serif;
+  }
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;overflow-x:hidden}
+
+  /* noise overlay */
+  body::before{
+    content:'';position:fixed;inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events:none;z-index:0;opacity:.4;
+  }
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 4rem;background:rgba(10,10,15,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+  .logo{font-family:var(--mono);font-size:.85rem;color:var(--accent);letter-spacing:.1em}
+  .nav-links{display:flex;gap:2rem;list-style:none}
+  .nav-links a{color:var(--muted);text-decoration:none;font-size:.85rem;letter-spacing:.05em;transition:color .2s}
+  .nav-links a:hover{color:var(--accent)}
+  .hire-btn{background:var(--accent);color:#0a0a0f;padding:.45rem 1.2rem;border-radius:4px;font-family:var(--mono);font-size:.8rem;font-weight:700;text-decoration:none;letter-spacing:.05em;transition:opacity .2s}
+  .hire-btn:hover{opacity:.85}
+
+  /* SECTIONS */
+  section{position:relative;z-index:1;padding:6rem 4rem}
+  .container{max-width:1100px;margin:0 auto}
+
+  /* HERO */
+  #hero{min-height:100vh;display:flex;align-items:center;padding-top:8rem}
+  .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+  .hero-tag{font-family:var(--mono);font-size:.75rem;color:var(--accent);letter-spacing:.2em;margin-bottom:1.5rem;display:flex;align-items:center;gap:.5rem}
+  .hero-tag::before{content:'';display:block;width:24px;height:1px;background:var(--accent)}
+  h1{font-size:clamp(2.8rem,5vw,4.5rem);font-weight:800;line-height:1.05;letter-spacing:-.02em}
+  h1 span{color:var(--accent);display:block}
+  .hero-sub{color:var(--muted);font-size:1.05rem;margin:1.5rem 0 2.5rem;max-width:400px;line-height:1.7}
+  .hero-cta{display:flex;gap:1rem;flex-wrap:wrap}
+  .btn-primary{background:var(--accent);color:#0a0a0f;padding:.8rem 2rem;border-radius:4px;font-family:var(--mono);font-size:.85rem;font-weight:700;text-decoration:none;letter-spacing:.05em;transition:all .2s;border:none;cursor:pointer}
+  .btn-primary:hover{opacity:.85;transform:translateY(-2px)}
+  .btn-outline{border:1px solid var(--border);color:var(--text);padding:.8rem 2rem;border-radius:4px;font-family:var(--mono);font-size:.85rem;text-decoration:none;letter-spacing:.05em;transition:all .2s}
+  .btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* terminal card */
+  .terminal{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;font-family:var(--mono);font-size:.8rem}
+  .term-bar{background:#1e1e28;padding:.6rem 1rem;display:flex;gap:.4rem;align-items:center}
+  .dot{width:10px;height:10px;border-radius:50%}
+  .dot.r{background:#ff5f57}.dot.y{background:#ffbd2e}.dot.g{background:#28c941}
+  .term-body{padding:1.5rem;line-height:2}
+  .term-prompt{color:var(--accent)}
+  .term-cmd{color:var(--text)}
+  .term-out{color:var(--muted)}
+  .term-highlight{color:var(--accent2)}
+
+  /* STATS */
+  #stats{padding:3rem 4rem;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;max-width:1100px;margin:0 auto;text-align:center}
+  .stat-num{font-size:2.5rem;font-weight:800;color:var(--accent);font-family:var(--mono)}
+  .stat-label{font-size:.8rem;color:var(--muted);letter-spacing:.1em;margin-top:.25rem}
+
+  /* ABOUT / SKILLS */
+  .section-label{font-family:var(--mono);font-size:.75rem;color:var(--accent);letter-spacing:.2em;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+  .section-label::before{content:'';display:block;width:24px;height:1px;background:var(--accent)}
+  h2{font-size:2rem;font-weight:800;margin-bottom:2rem;letter-spacing:-.02em}
+
+  .skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}
+  .skill-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;transition:border-color .2s,transform .2s}
+  .skill-card:hover{border-color:var(--accent2);transform:translateY(-3px)}
+  .skill-icon{font-size:1.5rem;margin-bottom:.75rem}
+  .skill-name{font-weight:700;font-size:.95rem;margin-bottom:.5rem}
+  .skill-tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.75rem}
+  .tag{background:var(--tag-bg);color:var(--muted);font-size:.7rem;font-family:var(--mono);padding:.2rem .55rem;border-radius:3px;border:1px solid var(--border)}
+
+  /* EXPERIENCE */
+  .exp-list{display:flex;flex-direction:column;gap:2rem}
+  .exp-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:2rem;position:relative;overflow:hidden;transition:border-color .2s}
+  .exp-card:hover{border-color:var(--accent2)}
+  .exp-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);border-radius:3px 0 0 3px}
+  .exp-meta{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem}
+  .exp-role{font-size:1.1rem;font-weight:700}
+  .exp-company{color:var(--accent);font-family:var(--mono);font-size:.85rem;margin-top:.2rem}
+  .exp-date{font-family:var(--mono);font-size:.75rem;color:var(--muted);background:var(--tag-bg);padding:.3rem .7rem;border-radius:4px;border:1px solid var(--border);white-space:nowrap}
+  .exp-bullets{list-style:none;margin-top:1rem;display:flex;flex-direction:column;gap:.6rem}
+  .exp-bullets li{color:var(--muted);font-size:.9rem;padding-left:1.2rem;position:relative}
+  .exp-bullets li::before{content:'▸';color:var(--accent);position:absolute;left:0}
+
+  /* ACHIEVEMENTS */
+  .ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem}
+  .ach-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.5rem;transition:all .2s}
+  .ach-card:hover{border-color:var(--accent);transform:translateY(-3px)}
+  .ach-num{font-size:2rem;font-weight:800;font-family:var(--mono);color:var(--accent);line-height:1}
+  .ach-desc{color:var(--muted);font-size:.88rem;margin-top:.5rem;line-height:1.5}
+
+  /* PROJECTS */
+  .proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}
+  .proj-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.75rem;transition:all .2s}
+  .proj-card:hover{border-color:var(--accent2);transform:translateY(-4px)}
+  .proj-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem}
+  .proj-title{font-weight:700;font-size:1rem}
+  .proj-badge{font-family:var(--mono);font-size:.65rem;background:rgba(124,109,255,.15);color:var(--accent2);padding:.2rem .55rem;border-radius:3px;border:1px solid rgba(124,109,255,.3)}
+  .proj-desc{color:var(--muted);font-size:.88rem;line-height:1.6;margin-bottom:1rem}
+
+  /* HIRE ME */
+  #hire{background:linear-gradient(135deg,#0f1a14 0%,#0a0a0f 50%,#100f1a 100%);border-top:1px solid var(--border)}
+  .hire-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:4rem;text-align:center;position:relative;overflow:hidden}
+  .hire-box::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:400px;height:400px;background:radial-gradient(circle,rgba(79,255,176,.08) 0%,transparent 70%);pointer-events:none}
+  .hire-title{font-size:clamp(2rem,4vw,3rem);font-weight:800;margin-bottom:1rem;letter-spacing:-.02em}
+  .hire-title em{color:var(--accent);font-style:normal}
+  .hire-sub{color:var(--muted);font-size:1rem;margin-bottom:2.5rem;max-width:520px;margin-left:auto;margin-right:auto}
+  .hire-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+  .hire-email{font-family:var(--mono);font-size:.85rem;color:var(--muted);margin-top:2rem}
+  .hire-email a{color:var(--accent);text-decoration:none}
+  .hire-email a:hover{text-decoration:underline}
+
+  /* CONTACT */
+  .contact-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem}
+  .contact-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;text-align:center;text-decoration:none;color:var(--text);transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:.5rem}
+  .contact-card:hover{border-color:var(--accent);transform:translateY(-3px)}
+  .contact-icon{font-size:1.5rem}
+  .contact-label{font-size:.75rem;color:var(--muted);font-family:var(--mono)}
+  .contact-val{font-size:.88rem;font-weight:600;word-break:break-all}
+
+  /* FOOTER */
+  footer{border-top:1px solid var(--border);padding:2rem 4rem;text-align:center;color:var(--muted);font-family:var(--mono);font-size:.75rem}
+
+  /* ANIMATIONS */
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+  .cursor{animation:blink 1s step-end infinite;color:var(--accent)}
+
+  @media(max-width:768px){
+    nav{padding:1rem 1.5rem}
+    section,#stats{padding:4rem 1.5rem}
+    .hero-grid{grid-template-columns:1fr;gap:2rem}
+    .stats-grid{grid-template-columns:repeat(2,1fr)}
+    footer{padding:2rem 1.5rem}
+    .hire-box{padding:2rem}
+    .nav-links{display:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="logo">PG.dev</span>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a class="hire-btn" href="mailto:prajwalgadakh.4455@gmail.com">Hire Me →</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-tag">Available for Work</div>
+        <h1>Prajwal<span>Gadakh</span></h1>
+        <p class="hero-sub">Java & Backend Developer with 3+ years crafting high-performance microservices, RESTful APIs, and enterprise systems that scale. I don't just write code — I solve bottlenecks.</p>
+        <div class="hero-cta">
+          <a class="btn-primary" href="mailto:prajwalgadakh.4455@gmail.com">Hire Me Now</a>
+          <a class="btn-outline" href="#experience">View Work</a>
+        </div>
+      </div>
+      <div class="terminal">
+        <div class="term-bar">
+          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+        </div>
+        <div class="term-body">
+          <div><span class="term-prompt">$ </span><span class="term-cmd">whoami</span></div>
+          <div class="term-out">Prajwal Gadakh — Java Developer</div>
+          <div style="margin-top:.5rem"><span class="term-prompt">$ </span><span class="term-cmd">cat skills.txt</span></div>
+          <div class="term-out">→ <span class="term-highlight">Java</span> | Spring Boot | Microservices</div>
+          <div class="term-out">→ <span class="term-highlight">REST APIs</span> | Hibernate | JWT</div>
+          <div class="term-out">→ <span class="term-highlight">MySQL</span> | MongoDB | SQL Server</div>
+          <div class="term-out">→ <span class="term-highlight">AWS</span> (EC2, S3) | Redis | Maven</div>
+          <div class="term-out">→ <span class="term-highlight">Node.js</span> | Git | GitLab | Agile</div>
+          <div style="margin-top:.5rem"><span class="term-prompt">$ </span><span class="term-cmd">status</span></div>
+          <div class="term-out">✓ Open to full-time opportunities<span class="cursor">█</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div id="stats">
+  <div class="stats-grid">
+    <div><div class="stat-num">3+</div><div class="stat-label">Years Experience</div></div>
+    <div><div class="stat-num">65%</div><div class="stat-label">Data Load Time Cut</div></div>
+    <div><div class="stat-num">200+</div><div class="stat-label">Modules Delivered</div></div>
+    <div><div class="stat-num">60+</div><div class="stat-label">Enterprise Features</div></div>
+  </div>
+</div>
+
+<!-- ABOUT & SKILLS -->
+<section id="about">
+  <div class="container">
+    <div class="section-label">About Me</div>
+    <h2>Backend-first. Performance-obsessed.</h2>
+    <p style="color:var(--muted);max-width:680px;font-size:1rem;margin-bottom:3rem;line-height:1.8">
+      I'm a Java developer who thrives in complex backend systems. My edge is optimization — whether that's cutting SQL query times, reducing API latency, or architecting microservices that handle high-volume transactional loads. I've shipped 200+ modules across BPM platforms, enterprise ERPs, and e-commerce backends. I bring Agile discipline, strong communication, and a habit of writing code others can actually maintain.
+    </p>
+
+    <div class="section-label">Technical Skills</div>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <div class="skill-icon">☕</div>
+        <div class="skill-name">Core Java & Frameworks</div>
+        <div class="skill-tags">
+          <span class="tag">Java</span><span class="tag">Spring Boot</span><span class="tag">Spring MVC</span><span class="tag">J2EE</span><span class="tag">Hibernate</span><span class="tag">JWT</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">🔗</div>
+        <div class="skill-name">APIs & Architecture</div>
+        <div class="skill-tags">
+          <span class="tag">REST APIs</span><span class="tag">Microservices</span><span class="tag">Meteor</span><span class="tag">AJAX</span><span class="tag">JSON</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">🗄️</div>
+        <div class="skill-name">Databases</div>
+        <div class="skill-tags">
+          <span class="tag">MySQL</span><span class="tag">MongoDB</span><span class="tag">SQL Server</span><span class="tag">Redis</span><span class="tag">Stored Procs</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">☁️</div>
+        <div class="skill-name">Cloud & DevOps</div>
+        <div class="skill-tags">
+          <span class="tag">AWS EC2</span><span class="tag">AWS S3</span><span class="tag">Git</span><span class="tag">GitLab</span><span class="tag">Maven</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">🌐</div>
+        <div class="skill-name">Web & Frontend</div>
+        <div class="skill-tags">
+          <span class="tag">Node.js</span><span class="tag">jQuery</span><span class="tag">HTML</span><span class="tag">CSS</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">🛠️</div>
+        <div class="skill-name">Tools & Process</div>
+        <div class="skill-tags">
+          <span class="tag">Postman</span><span class="tag">Eclipse</span><span class="tag">Agile/Scrum</span><span class="tag">Code Reviews</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience" style="background:var(--surface)">
+  <div class="container">
+    <div class="section-label">Experience</div>
+    <h2>Where I've Built Things</h2>
+    <div class="exp-list">
+
+      <div class="exp-card">
+        <div class="exp-meta">
+          <div>
+            <div class="exp-role">Java Developer</div>
+            <div class="exp-company">Gridscape Solutions · Vadodara</div>
+          </div>
+          <span class="exp-date">Nov 2023 – Present</span>
+        </div>
+        <ul class="exp-bullets">
+          <li>Built and maintained RESTful backend services using Spring Boot, Hibernate, and Microservices architecture spanning 60+ enterprise system features.</li>
+          <li>Reduced API latency by profiling and refactoring Java backend workflows and database query patterns, improving throughput for high-traffic endpoints.</li>
+          <li>Integrated backend services with frontend via jQuery, AJAX, and JSON for seamless data exchange.</li>
+          <li>Authored technical specs and implemented business logic for complex, multi-stakeholder enterprise features.</li>
+          <li>Led source code management and release workflows on GitLab; actively participated in sprint planning and peer code reviews.</li>
+          <li>Introduced centralized exception handling and logging patterns that reduced production incident response time.</li>
+        </ul>
+      </div>
+
+      <div class="exp-card">
+        <div class="exp-meta">
+          <div>
+            <div class="exp-role">Junior Java Developer</div>
+            <div class="exp-company">Netxs Solutions · Ahmedabad</div>
+          </div>
+          <span class="exp-date">Jan 2023 – Oct 2023</span>
+        </div>
+        <ul class="exp-bullets">
+          <li>Contributed backend functionality across 200+ modules in a large-scale Business Process Management application.</li>
+          <li>Reduced data loading time by 65% by rewriting core Java processing logic and optimizing SQL Server queries with proper indexing strategies.</li>
+          <li>Designed reusable J2EE components that significantly reduced code duplication across the team codebase.</li>
+          <li>Developed SQL Server stored procedures for high-volume transactional data operations, improving data integrity and performance.</li>
+          <li>Collaborated with cross-functional teams to define data models and API contracts, improving dev-to-QA handoff efficiency.</li>
+        </ul>
+      </div>
+
+      <div class="exp-card">
+        <div class="exp-meta">
+          <div>
+            <div class="exp-role">Java Developer Intern</div>
+            <div class="exp-company">Softcrowd Technologies · Nashik</div>
+          </div>
+          <span class="exp-date">Jan 2022 – Apr 2022</span>
+        </div>
+        <ul class="exp-bullets">
+          <li>Performed load testing on e-commerce platforms to surface backend performance bottlenecks and propose code-level fixes.</li>
+          <li>Cut average page load time by 50% through targeted backend code refactoring and caching improvements.</li>
+          <li>Assisted senior engineers in debugging and regression testing of backend services under tight sprint timelines.</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ACHIEVEMENTS -->
+<section id="achievements">
+  <div class="container">
+    <div class="section-label">Key Achievements</div>
+    <h2>Numbers That Matter</h2>
+    <div class="ach-grid">
+      <div class="ach-card">
+        <div class="ach-num">65%</div>
+        <div class="ach-desc">Reduction in data loading time at Netxs Solutions by rewriting Java processing logic and optimizing SQL Server queries.</div>
+      </div>
+      <div class="ach-card">
+        <div class="ach-num">50%</div>
+        <div class="ach-desc">Faster e-commerce page loads at Softcrowd Technologies through backend refactoring and smart caching.</div>
+      </div>
+      <div class="ach-card">
+        <div class="ach-num">200+</div>
+        <div class="ach-desc">BPM application modules built and maintained, handling high-volume transactional workloads at scale.</div>
+      </div>
+      <div class="ach-card">
+        <div class="ach-num">60+</div>
+        <div class="ach-desc">Enterprise system features designed, specced, and shipped at Gridscape Solutions across production microservices.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" style="background:var(--surface)">
+  <div class="container">
+    <div class="section-label">Projects</div>
+    <h2>Things I've Shipped</h2>
+    <div class="proj-grid">
+
+      <div class="proj-card">
+        <div class="proj-header">
+          <span class="proj-title">BPM Enterprise Platform</span>
+          <span class="proj-badge">Spring Boot</span>
+        </div>
+        <p class="proj-desc">Large-scale Business Process Management system with 200+ functional modules. Optimized SQL queries and rewrote Java processing layers to achieve a 65% reduction in data load times.</p>
+        <div class="skill-tags"><span class="tag">Java</span><span class="tag">Spring Boot</span><span class="tag">SQL Server</span><span class="tag">J2EE</span></div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-header">
+          <span class="proj-title">Microservices API Suite</span>
+          <span class="proj-badge">Microservices</span>
+        </div>
+        <p class="proj-desc">Designed and built a suite of RESTful microservices covering 60+ enterprise features with Spring Boot and Hibernate, integrated with frontend via AJAX/JSON pipelines.</p>
+        <div class="skill-tags"><span class="tag">Microservices</span><span class="tag">REST API</span><span class="tag">Hibernate</span><span class="tag">JWT</span></div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-header">
+          <span class="proj-title">E-Commerce Backend Overhaul</span>
+          <span class="proj-badge">Optimization</span>
+        </div>
+        <p class="proj-desc">Performance audit and backend overhaul for a high-traffic e-commerce platform. Identified bottlenecks via load testing and applied refactoring strategies cutting page load time by 50%.</p>
+        <div class="skill-tags"><span class="tag">Java</span><span class="tag">Load Testing</span><span class="tag">Caching</span><span class="tag">MySQL</span></div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-header">
+          <span class="proj-title">Reusable J2EE Component Library</span>
+          <span class="proj-badge">DX</span>
+        </div>
+        <p class="proj-desc">Built a shared library of reusable J2EE components that eliminated duplicate code patterns across a multi-team codebase, improving maintainability and onboarding speed.</p>
+        <div class="skill-tags"><span class="tag">J2EE</span><span class="tag">Java</span><span class="tag">Maven</span><span class="tag">GitLab</span></div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-header">
+          <span class="proj-title">AWS Cloud-Backed Services</span>
+          <span class="proj-badge">Cloud</span>
+        </div>
+        <p class="proj-desc">Deployed and maintained backend services on AWS EC2 with S3 object storage integration. Managed infrastructure configuration and deployment pipelines in GitLab CI workflows.</p>
+        <div class="skill-tags"><span class="tag">AWS EC2</span><span class="tag">AWS S3</span><span class="tag">Spring Boot</span><span class="tag">GitLab</span></div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-header">
+          <span class="proj-title">High-Volume Transactional DB Layer</span>
+          <span class="proj-badge">SQL</span>
+        </div>
+        <p class="proj-desc">Engineered SQL Server stored procedures and data access patterns for enterprise transactional systems processing thousands of records per minute with consistency guarantees.</p>
+        <div class="skill-tags"><span class="tag">SQL Server</span><span class="tag">Stored Procs</span><span class="tag">Hibernate</span><span class="tag">Redis</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION & CERTS -->
+<section id="education">
+  <div class="container">
+    <div class="section-label">Education & Certifications</div>
+    <h2>Credentials</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+      <div class="exp-card">
+        <div class="exp-role">Bachelor of Computer Applications (BCA)</div>
+        <div class="exp-company">CMCS College, Nashik, Maharashtra</div>
+        <div class="exp-date" style="display:inline-block;margin-top:.75rem">2019 – 2022</div>
+        <ul class="exp-bullets" style="margin-top:1rem">
+          <li>DOST-SEI Scholar — Academic Merit Award</li>
+          <li>President, Computer Science Club</li>
+        </ul>
+      </div>
+      <div class="exp-card">
+        <div class="exp-role">Certifications</div>
+        <ul class="exp-bullets" style="margin-top:.5rem">
+          <li>Master Diploma in Full Stack Java Developer — Profound Edutech</li>
+          <li>Spring Boot 3 & Spring Framework 6 — Udemy</li>
+          <li>Actively pursuing AWS Developer Associate certification</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HIRE ME CTA -->
+<section id="hire">
+  <div class="container">
+    <div class="hire-box">
+      <div class="section-label" style="justify-content:center">Open to Opportunities</div>
+      <h2 class="hire-title">Let's build something<br><em>fast, scalable & reliable.</em></h2>
+      <p class="hire-sub">I'm actively looking for backend / Java developer roles where I can bring measurable impact. If you need someone who can cut latency, architect microservices, and ship features — let's talk.</p>
+      <div class="hire-actions">
+        <a class="btn-primary" href="mailto:prajwalgadakh.4455@gmail.com">📧 Email Me Directly</a>
+        <a class="btn-outline" href="https://linkedin.com/in/prajwal-gadakh" target="_blank">LinkedIn Profile</a>
+        <a class="btn-outline" href="https://github.com/prajwalgadakhchandori" target="_blank">GitHub</a>
+      </div>
+      <p class="hire-email">Drop me a line at <a href="mailto:prajwalgadakh.4455@gmail.com">prajwalgadakh.4455@gmail.com</a> · +91-7499300215</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="section-label">Get in Touch</div>
+    <h2>Contact</h2>
+    <div class="contact-grid">
+      <a class="contact-card" href="mailto:prajwalgadakh.4455@gmail.com">
+        <div class="contact-icon">✉️</div>
+        <div class="contact-label">Email</div>
+        <div class="contact-val">prajwalgadakh.4455@gmail.com</div>
+      </a>
+      <a class="contact-card" href="tel:+917499300215">
+        <div class="contact-icon">📱</div>
+        <div class="contact-label">Phone</div>
+        <div class="contact-val">+91-7499300215</div>
+      </a>
+      <a class="contact-card" href="https://linkedin.com/in/prajwal-gadakh" target="_blank">
+        <div class="contact-icon">💼</div>
+        <div class="contact-label">LinkedIn</div>
+        <div class="contact-val">linkedin.com/in/prajwal-gadakh</div>
+      </a>
+      <a class="contact-card" href="https://github.com/prajwalgadakhchandori" target="_blank">
+        <div class="contact-icon">🐙</div>
+        <div class="contact-label">GitHub</div>
+        <div class="contact-val">github.com/prajwalgadakhchandori</div>
+      </a>
+      <a class="contact-card" href="#">
+        <div class="contact-icon">📍</div>
+        <div class="contact-label">Location</div>
+        <div class="contact-val">Nashik, Maharashtra, India</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Built with ☕ · Prajwal Gadakh © 2026 · Available for immediate hiring</p>
+</footer>
+
+</body>
+</html>
