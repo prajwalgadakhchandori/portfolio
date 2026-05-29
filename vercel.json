@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/prajwal_gadakh_portfolio.html" }
+  ]
+}
